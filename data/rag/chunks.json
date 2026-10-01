@@ -1,0 +1,26 @@
+[
+  {
+    "source": "company_info.txt",
+    "text": "Company Information\n\nThe company provides AI-powered workforce automation solutions.\n\nThe platform focuses on helping businesses automate repetitive business\nprocesses using AI agents.\n\nAI agents can understand customer requests, retrieve relevant company\ninformation, use connected business tools, and perform actions through\nintegrated workflows.\n\nTypical use cases include:\n\n- Sales automation\n- Lead qualification\n- Customer support\n- Appointment scheduling\n- Follow-up automation\n- CRM automatio"
+  },
+  {
+    "source": "company_info.txt",
+    "text": "ead qualification\n- Customer support\n- Appointment scheduling\n- Follow-up automation\n- CRM automation\n- Business process automation\n\nCustomers can request a product demonstration through the sales team."
+  },
+  {
+    "source": "pricing.txt",
+    "text": "Pricing Plans\n\nStarter Plan:\n- Designed for small businesses\n- Up to 1 AI sales agent\n- Basic lead capture\n- Email follow-ups\n- Monthly price: $49\n\nGrowth Plan:\n- Designed for growing businesses\n- Up to 5 AI agents\n- Lead qualification\n- CRM integration\n- Workflow automation\n- Monthly price: $199\n\nEnterprise Plan:\n- Designed for larger organizations\n- Custom number of AI agents\n- Advanced integrations\n- Custom workflows\n- Dedicated support\n- Pricing: Contact sales for a custom quote"
+  },
+  {
+    "source": "pricing.txt",
+    "text": "ions\n- Custom workflows\n- Dedicated support\n- Pricing: Contact sales for a custom quote"
+  },
+  {
+    "source": "products.txt",
+    "text": "AI Sales Workforce Platform\n\nOur AI Sales Workforce platform helps businesses automate repetitive sales\nand customer engagement tasks using AI agents.\n\nCore capabilities:\n\n- AI-powered customer conversations\n- Lead qualification\n- Lead capture\n- Automated follow-ups\n- Demo scheduling\n- Customer question answering\n- CRM integration\n- Email automation\n- Workflow automation\n- RAG-based company knowledge retrieval\n\nThe platform can operate across multiple customer communication channels\nand can conn"
+  },
+  {
+    "source": "products.txt",
+    "text": "dge retrieval\n\nThe platform can operate across multiple customer communication channels\nand can connect AI agents to business tools and workflows."
+  }
+]
