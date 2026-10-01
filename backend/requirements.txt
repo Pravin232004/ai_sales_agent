@@ -2,3 +2,5 @@ google-genai
 python-dotenv
 faiss-cpu
 numpy
+fastapi
+uvicorn
