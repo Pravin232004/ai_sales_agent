@@ -1,0 +1,22 @@
+Company Information
+
+The company provides AI-powered workforce automation solutions.
+
+The platform focuses on helping businesses automate repetitive business
+processes using AI agents.
+
+AI agents can understand customer requests, retrieve relevant company
+information, use connected business tools, and perform actions through
+integrated workflows.
+
+Typical use cases include:
+
+- Sales automation
+- Lead qualification
+- Customer support
+- Appointment scheduling
+- Follow-up automation
+- CRM automation
+- Business process automation
+
+Customers can request a product demonstration through the sales team.

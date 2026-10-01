@@ -1,0 +1,24 @@
+Pricing Plans
+
+Starter Plan:
+- Designed for small businesses
+- Up to 1 AI sales agent
+- Basic lead capture
+- Email follow-ups
+- Monthly price: $49
+
+Growth Plan:
+- Designed for growing businesses
+- Up to 5 AI agents
+- Lead qualification
+- CRM integration
+- Workflow automation
+- Monthly price: $199
+
+Enterprise Plan:
+- Designed for larger organizations
+- Custom number of AI agents
+- Advanced integrations
+- Custom workflows
+- Dedicated support
+- Pricing: Contact sales for a custom quote

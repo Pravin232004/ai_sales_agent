@@ -1,0 +1,20 @@
+AI Sales Workforce Platform
+
+Our AI Sales Workforce platform helps businesses automate repetitive sales
+and customer engagement tasks using AI agents.
+
+Core capabilities:
+
+- AI-powered customer conversations
+- Lead qualification
+- Lead capture
+- Automated follow-ups
+- Demo scheduling
+- Customer question answering
+- CRM integration
+- Email automation
+- Workflow automation
+- RAG-based company knowledge retrieval
+
+The platform can operate across multiple customer communication channels
+and can connect AI agents to business tools and workflows.
