@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from google import genai
 
 from app.tools.calendar_tools import check_demo_availability
+from app.tools.lead_tools import capture_lead
 
 
 load_dotenv()
@@ -19,12 +20,15 @@ client = genai.Client(api_key=api_key)
 def run_sales_agent(user_message: str) -> str:
 
     response = client.models.generate_content(
-        model="gemini-3.7-flash",
-        contents=user_message,
-        config={
-            "tools": [check_demo_availability]
-        },
-    )
+    model="gemini-3.7-flash",
+    contents=user_message,
+    config={
+        "tools": [
+            check_demo_availability,
+            capture_lead
+        ]
+    },
+)
 
     return response.text
 
@@ -32,9 +36,12 @@ def run_sales_agent(user_message: str) -> str:
 if __name__ == "__main__":
 
     message = (
-        "I want to book a product demo on October 2, 2026 "
-        "at 3 PM. Can you check whether that time is available?"
-    )
+    "Hi, my name is Pravin Kumar. "
+    "My email is pravin@example.com. "
+    "I work at ABC Technologies. "
+    "I am interested in your AI automation solution. "
+    "Please save my details as a new lead."
+)
 
     result = run_sales_agent(message)
 
