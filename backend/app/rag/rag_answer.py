@@ -31,7 +31,7 @@ def answer_with_rag(question: str) -> str:
     if not results:
         return "I could not find relevant information in the knowledge base."
 
-    # Step 2: Build context from retrieved chunks
+    # Build context from retrieved chunks
     context_parts = []
 
     for result in results:
@@ -42,7 +42,7 @@ def answer_with_rag(question: str) -> str:
 
     context = "\n\n---\n\n".join(context_parts)
 
-    # Step 3: Build the prompt
+    # Build the prompt
     prompt = f"""
 You are an AI sales assistant.
 

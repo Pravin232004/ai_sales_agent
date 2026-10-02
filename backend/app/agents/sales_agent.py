@@ -9,9 +9,7 @@ from app.tools.calendar_tools import check_demo_availability
 from app.tools.lead_tools import capture_lead
 
 
-# ---------------------------------------------------------
 # Environment and Gemini client
-# ---------------------------------------------------------
 
 load_dotenv()
 
@@ -22,10 +20,7 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-
-# ---------------------------------------------------------
 # RAG context
-# ---------------------------------------------------------
 
 def get_rag_context(user_message: str) -> str:
     """
@@ -48,9 +43,7 @@ def get_rag_context(user_message: str) -> str:
     return "\n\n---\n\n".join(context_parts)
 
 
-# ---------------------------------------------------------
 # Tool declarations
-# ---------------------------------------------------------
 
 calendar_tool = {
     "type": "function",
@@ -112,10 +105,7 @@ TOOLS = [
     lead_capture_tool
 ]
 
-
-# ---------------------------------------------------------
 # Tool execution
-# ---------------------------------------------------------
 
 def execute_tool(function_name: str, arguments: dict) -> dict:
     """
@@ -142,9 +132,7 @@ def execute_tool(function_name: str, arguments: dict) -> dict:
     }
 
 
-# ---------------------------------------------------------
 # AI Sales Agent
-# ---------------------------------------------------------
 
 def run_sales_agent(user_message: str) -> str:
     """
@@ -177,9 +165,7 @@ KNOWLEDGE BASE:
 ----------------
 """
 
-    # -----------------------------------------------------
     # First interaction
-    # -----------------------------------------------------
 
     interaction = client.interactions.create(
         model="gemini-3.6-flash",
@@ -192,9 +178,7 @@ CUSTOMER MESSAGE:
         tools=TOOLS
     )
 
-    # -----------------------------------------------------
     # Check whether Gemini requested any tools
-    # -----------------------------------------------------
 
     function_calls = [
         step
@@ -202,16 +186,12 @@ CUSTOMER MESSAGE:
         if step.type == "function_call"
     ]
 
-    # -----------------------------------------------------
     # No tool required
-    # -----------------------------------------------------
 
     if not function_calls:
         return interaction.output_text
 
-    # -----------------------------------------------------
     # Execute requested tools
-    # -----------------------------------------------------
 
     function_results = []
 
@@ -248,9 +228,7 @@ CUSTOMER MESSAGE:
             }
         )
 
-    # -----------------------------------------------------
     # Send tool results back to Gemini
-    # -----------------------------------------------------
 
     final_interaction = client.interactions.create(
         model="gemini-3.6-flash",
@@ -261,10 +239,7 @@ CUSTOMER MESSAGE:
 
     return final_interaction.output_text
 
-
-# ---------------------------------------------------------
 # Test
-# ---------------------------------------------------------
 
 if __name__ == "__main__":
 
