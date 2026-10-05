@@ -1,0 +1,22 @@
+(function(){try{var e=typeof window<`u`?window:typeof global<`u`?global:typeof globalThis<`u`?globalThis:typeof self<`u`?self:{};e.SENTRY_RELEASE={id:`n8n@2.41.5`}}catch{}})();try{(function(){var e=typeof window<`u`?window:typeof global<`u`?global:typeof globalThis<`u`?globalThis:typeof self<`u`?self:{},t=new e.Error().stack;t&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[t]=`7c76b930-fc88-4a5f-98af-cde77def95c7`,e._sentryDebugIdIdentifier=`sentry-dbid-7c76b930-fc88-4a5f-98af-cde77def95c7`)})()}catch{}import{t as e}from"./useDeviceSupport-BvAbB0M8.js";import{t}from"./useRootStore-BWP1G4PE.js";import{t as n}from"./settings.store-CiUjm_D-.js";import{t as r}from"./src-CEfvRlI-.js";function i(){let i=n(),a=t(),o=r(),{isTouchDevice:s,userAgent:c}=e(),l=e=>{let t={n8nVersion:a.versionCli,platform:i.isDocker&&i.deploymentType===`cloud`?`docker (cloud)`:i.isDocker?`docker (self-hosted)`:`npm`,nodeJsVersion:i.nodeJsVersion,nodeEnv:i.nodeEnv,database:i.databaseType===`postgresdb`?`postgres`:i.databaseType,executionMode:i.isQueueModeEnabled?i.isMultiMain?`scaling (multi-main)`:`scaling (single-main)`:`regular`,concurrency:i.settings.concurrency,license:i.isCommunityPlan||!i.settings.license?`community`:i.settings.license.environment===`production`?`enterprise (production)`:`enterprise (sandbox)`};return e?t:{...t,consumerId:e?void 0:i.consumerId}},u=()=>({success:i.saveDataSuccessExecution,error:i.saveDataErrorExecution,progress:i.saveDataProgressExecution,manual:i.saveManualExecutions,binaryMode:i.binaryDataMode===`default`?`memory`:i.binaryDataMode}),d=()=>i.pruning?.isEnabled?{enabled:!0,maxAge:`${i.pruning?.maxAge} hours`,maxCount:`${i.pruning?.maxCount} executions`}:{enabled:!1},f=()=>{let e={};if(i.security.blockFileAccessToN8nFiles||(e.blockFileAccessToN8nFiles=!1),i.security.secureCookie||(e.secureCookie=!1),Object.keys(e).length!==0)return e},p=()=>({userAgent:c,isTouchDevice:s}),m=()=>{let e=o.clusterInfo;if(!e)return;let t=e.instances.map(e=>({instanceKey:e.instanceKey,hostId:e.hostId,instanceType:e.instanceType,instanceRole:e.instanceRole,version:e.version})),n=[...new Set(t.map(e=>e.version))].sort(),r=Object.values(e.checks).map(e=>({check:e.check,status:e.status,warnings:e.warnings.length>0?e.warnings.map(e=>e.code).join(`; `):`-`})).sort((e,t)=>e.check.localeCompare(t.check));return{instanceCount:t.length,versions:n.join(`, `),instances:t,checks:r}},h=e=>{let t={core:l(e),storage:u(),pruning:d(),client:p()},n=f();n&&(t.security=n);let r=m();return r&&(t.cluster=r),t},g=(e,{secondaryHeader:t})=>{let n=t?`#`:``,r=`${n}# Debug info\n\n`;for(let t in e){r+=`${n}## ${t}\n\n`;let i=e[t];if(i){for(let[e,t]of Object.entries(i))if(Array.isArray(t)){r+=`- ${e}:\n`;for(let e of t){let t=Object.entries(e).map(([e,t])=>`${e}: ${t}`);r+=`  - ${t.join(`, `)}\n`}}else r+=`- ${e}: ${t}\n`;r+=`
+`}}return r},_=e=>`${e}Generated at: ${new Date().toISOString()}`;return{generateDebugInfo:({skipSensitive:e,secondaryHeader:t}={})=>_(g(h(e),{secondaryHeader:t}))}}var a={QUICKSTART_VIDEO:`https://www.youtube.com/watch?v=4cQWJViybAQ`,DOCUMENTATION:`https://docs.n8n.io?utm_source=n8n_app&utm_medium=app_sidebar`,FORUM:`https://community.n8n.io?utm_source=n8n_app&utm_medium=app_sidebar`,COURSES:`https://docs.n8n.io/courses/`,SUPPORT:`https://support.n8n.io`},o=`https://github.com/n8n-io/n8n/issues/new?labels=bug-report`,s=`
+<!-- Please follow the template below. Skip the questions that are not relevant to you. -->
+
+## Describe the problem/error/question
+
+
+## What is the error message (if any)?
+
+
+## Please share your workflow/screenshots/recording
+
+\`\`\`
+(Select the nodes on your canvas and use the keyboard shortcuts CMD+C/CTRL+C and CMD+V/CTRL+V to copy and paste the workflow.)
+⚠️ WARNING ⚠️ If you have sensitive data in your workflow (like API keys), please remove it before sharing.
+\`\`\`
+
+
+## Share the output returned by the last node
+<!-- If you need help with data transformations, please also share your expected output. -->
+
+`;function c(){let e=i();return{getReportingURL:()=>{let t=new URL(o),n=`${s}\n${e.generateDebugInfo({skipSensitive:!0,secondaryHeader:!0})}`;return t.searchParams.append(`body`,n),t.toString()}}}export{a as n,i as r,c as t};
