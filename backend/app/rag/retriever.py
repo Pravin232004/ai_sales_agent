@@ -6,9 +6,13 @@ import faiss
 import numpy as np
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 
+# ============================================================
 # Load environment variables
+# ============================================================
+
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -17,11 +21,31 @@ if not api_key:
     raise ValueError("GEMINI_API_KEY is not set in the .env file.")
 
 
+# ============================================================
 # Create Gemini client
-client = genai.Client(api_key=api_key)
+# ============================================================
+
+# Disable automatic retries.
+# This allows quota/rate-limit errors to reach our application
+# immediately instead of waiting through multiple retries.
+
+http_options = types.HttpOptions(
+    timeout=10000,
+    retry_options=types.HttpRetryOptions(
+        attempts=1
+    )
+)
+
+client = genai.Client(
+    api_key=api_key,
+    http_options=http_options
+)
 
 
+# ============================================================
 # Project paths
+# ============================================================
+
 BASE_DIR = Path(__file__).resolve().parents[3]
 
 RAG_DIR = BASE_DIR / "data" / "rag"
@@ -29,6 +53,10 @@ RAG_DIR = BASE_DIR / "data" / "rag"
 INDEX_PATH = RAG_DIR / "knowledge.index"
 CHUNKS_PATH = RAG_DIR / "chunks.json"
 
+
+# ============================================================
+# Load RAG data
+# ============================================================
 
 def load_rag_data():
     """
@@ -53,7 +81,11 @@ def load_rag_data():
     return index, chunks
 
 
-def generate_query_embedding(query):
+# ============================================================
+# Generate query embedding
+# ============================================================
+
+def generate_query_embedding(query: str):
     """
     Generate a Gemini embedding for the user's question.
     """
@@ -71,7 +103,11 @@ def generate_query_embedding(query):
     return embedding
 
 
-def search_knowledge(query, top_k=3):
+# ============================================================
+# Search knowledge base
+# ============================================================
+
+def search_knowledge(query: str, top_k: int = 3):
     """
     Search the FAISS knowledge base for relevant chunks.
     """
@@ -84,11 +120,17 @@ def search_knowledge(query, top_k=3):
     # uses inner product as cosine similarity.
     faiss.normalize_L2(query_embedding)
 
-    scores, indices = index.search(query_embedding, top_k)
+    scores, indices = index.search(
+        query_embedding,
+        top_k
+    )
 
     results = []
 
-    for score, index_position in zip(scores[0], indices[0]):
+    for score, index_position in zip(
+        scores[0],
+        indices[0]
+    ):
 
         if index_position == -1:
             continue
@@ -104,6 +146,10 @@ def search_knowledge(query, top_k=3):
     return results
 
 
+# ============================================================
+# Local test
+# ============================================================
+
 def main():
 
     query = "What products do you offer?"
@@ -111,16 +157,28 @@ def main():
     print("\nSearching knowledge base...")
     print(f"Question: {query}\n")
 
-    results = search_knowledge(query, top_k=3)
+    results = search_knowledge(
+        query,
+        top_k=3
+    )
 
     print("Retrieved results:\n")
 
-    for i, result in enumerate(results, start=1):
+    for i, result in enumerate(
+        results,
+        start=1
+    ):
 
         print(f"Result {i}")
         print(f"Source: {result['source']}")
-        print(f"Similarity score: {result['score']:.4f}")
-        print(f"Content: {result['text']}")
+        print(
+            f"Similarity score: "
+            f"{result['score']:.4f}"
+        )
+        print(
+            f"Content: "
+            f"{result['text']}"
+        )
         print("-" * 60)
 
 

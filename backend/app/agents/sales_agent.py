@@ -3,13 +3,16 @@ import json
 
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 from app.rag.retriever import search_knowledge
 from app.tools.calendar_tools import check_demo_availability
 from app.tools.lead_tools import capture_lead
 
 
+# ============================================================
 # Environment and Gemini client
+# ============================================================
 
 load_dotenv()
 
@@ -18,9 +21,25 @@ api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY is not set in the .env file.")
 
-client = genai.Client(api_key=api_key)
+# Disable automatic Gemini retries.
+# This is important so quota/rate-limit errors are returned
+# immediately to our application instead of waiting through
+# multiple automatic retries.
+http_options = types.HttpOptions(
+    retry_options=types.HttpRetryOptions(
+        attempts=1
+    )
+)
 
+client = genai.Client(
+    api_key=api_key,
+    http_options=http_options
+)
+
+
+# ============================================================
 # RAG context
+# ============================================================
 
 def get_rag_context(user_message: str) -> str:
     """
@@ -43,7 +62,9 @@ def get_rag_context(user_message: str) -> str:
     return "\n\n---\n\n".join(context_parts)
 
 
+# ============================================================
 # Tool declarations
+# ============================================================
 
 calendar_tool = {
     "type": "function",
@@ -92,10 +113,18 @@ lead_capture_tool = {
             },
             "interest": {
                 "type": "string",
-                "description": "Product, service, or solution the customer is interested in."
+                "description": (
+                    "Product, service, or solution the customer "
+                    "is interested in."
+                )
             }
         },
-        "required": ["name", "email", "company", "interest"]
+        "required": [
+            "name",
+            "email",
+            "company",
+            "interest"
+        ]
     }
 }
 
@@ -105,7 +134,10 @@ TOOLS = [
     lead_capture_tool
 ]
 
+
+# ============================================================
 # Tool execution
+# ============================================================
 
 def execute_tool(function_name: str, arguments: dict) -> dict:
     """
@@ -132,16 +164,30 @@ def execute_tool(function_name: str, arguments: dict) -> dict:
     }
 
 
+# ============================================================
 # AI Sales Agent
+# ============================================================
 
-def run_sales_agent(user_message: str) -> str:
+def run_sales_agent(user_message: str) -> dict:
     """
-    Run the AI Sales Agent using Gemini Interactions API,
-    RAG, and custom function tools.
+    Run the AI Sales Agent using:
+
+    - Gemini Interactions API
+    - RAG
+    - FAISS knowledge retrieval
+    - Calendar tool
+    - Lead capture tool
     """
 
-    # Retrieve relevant company information
+    # --------------------------------------------------------
+    # Retrieve company information from knowledge base
+    # --------------------------------------------------------
+
     rag_context = get_rag_context(user_message)
+
+    # --------------------------------------------------------
+    # System instruction
+    # --------------------------------------------------------
 
     system_instruction = f"""
 You are an AI Sales Agent for an AI Sales Workforce Platform.
@@ -149,14 +195,23 @@ You are an AI Sales Agent for an AI Sales Workforce Platform.
 Your responsibilities:
 
 1. Answer customer questions using the provided knowledge base.
-2. Use the check_demo_availability tool when the customer
-   asks about product demonstration availability.
+
+2. ALWAYS use the check_demo_availability tool when the
+   customer asks to book, schedule, check, or arrange a
+   product demonstration and provides a date and time.
+
+   Never answer a demo scheduling request without first
+   checking the requested date and time using the tool.
+
 3. Use the capture_lead tool when the customer provides
    lead information and asks to save or register it.
+
 4. Do not invent company information, products, pricing,
    or capabilities.
+
 5. If the knowledge base does not contain the answer,
    clearly say that you do not have enough information.
+
 6. Be professional, helpful, and concise.
 
 KNOWLEDGE BASE:
@@ -165,7 +220,9 @@ KNOWLEDGE BASE:
 ----------------
 """
 
-    # First interaction
+    # --------------------------------------------------------
+    # First Gemini interaction
+    # --------------------------------------------------------
 
     interaction = client.interactions.create(
         model="gemini-3.6-flash",
@@ -178,7 +235,9 @@ CUSTOMER MESSAGE:
         tools=TOOLS
     )
 
-    # Check whether Gemini requested any tools
+    # --------------------------------------------------------
+    # Check whether Gemini requested tools
+    # --------------------------------------------------------
 
     function_calls = [
         step
@@ -186,13 +245,21 @@ CUSTOMER MESSAGE:
         if step.type == "function_call"
     ]
 
+    # --------------------------------------------------------
     # No tool required
+    # --------------------------------------------------------
 
     if not function_calls:
-        return interaction.output_text
+        return {
+            "response": interaction.output_text,
+            "lead_captured": None
+        }
 
+    # --------------------------------------------------------
     # Execute requested tools
+    # --------------------------------------------------------
 
+    lead_capture_result = None
     function_results = []
 
     for function_call in function_calls:
@@ -209,6 +276,9 @@ CUSTOMER MESSAGE:
             function_call.name,
             function_call.arguments
         )
+
+        if function_call.name == "capture_lead":
+            lead_capture_result = result
 
         print(
             f"Tool result: {result}"
@@ -228,7 +298,9 @@ CUSTOMER MESSAGE:
             }
         )
 
+    # --------------------------------------------------------
     # Send tool results back to Gemini
+    # --------------------------------------------------------
 
     final_interaction = client.interactions.create(
         model="gemini-3.6-flash",
@@ -237,19 +309,25 @@ CUSTOMER MESSAGE:
         tools=TOOLS
     )
 
-    return final_interaction.output_text
+    return {
+        "response": final_interaction.output_text,
+        "lead_captured": lead_capture_result
+    }
 
-# Test
+
+# ============================================================
+# Local test
+# ============================================================
 
 if __name__ == "__main__":
 
     message = (
-    "Hi, my name is Pravin Kumar. "
-    "My email is pravin@example.com. "
-    "I work at ABC Technologies. "
-    "I am interested in your AI automation solution. "
-    "Please save my details as a new lead."
-)
+        "Hi, my name is Pravin Kumar. "
+        "My email is pravin@example.com. "
+        "I work at ABC Technologies. "
+        "I am interested in your AI automation solution. "
+        "Please save my details as a new lead."
+    )
 
     result = run_sales_agent(message)
 
