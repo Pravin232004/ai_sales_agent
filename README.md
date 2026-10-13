@@ -504,34 +504,6 @@ Never commit API keys, database passwords, or other credentials to GitHub.
 
 ---
 
-## Screenshots
-
-### AI Sales Agent Interface
-
-Add the main React application screenshot here.
-
-### RAG Product Query
-
-Add a screenshot showing the agent answering a product-related question.
-
-### Demo Availability
-
-Add a screenshot showing the agent checking demo availability.
-
-### Lead Capture
-
-Add a screenshot showing successful lead capture.
-
-### PostgreSQL Lead Data
-
-Add a screenshot showing the captured lead stored in PostgreSQL.
-
-### n8n Workflow
-
-Add a screenshot of the n8n workflow.
-
----
-
 ## Project Highlights
 
 This project demonstrates practical experience with:
